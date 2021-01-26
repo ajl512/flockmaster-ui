@@ -20,3 +20,7 @@ export const bgStyleMap = {
   bgi: 'backgroundImage',
   bgc: 'background'
 }
+
+export const otherStyleMap = {
+  zIndex: 'z-index',
+}

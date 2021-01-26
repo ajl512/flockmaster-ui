@@ -1,5 +1,6 @@
 <template lang="pug">
-  .f-div(:style="divStyle")
+  .f-div(:style="divStyle" :class="classObj")
+    slot
 </template>
 
 <script>
@@ -11,7 +12,8 @@ export default {
   name:'f-div',
   data() {
     return {
-      divStyle: {}
+      divStyle: {},
+      classObj: []
     }
   },
   watch: {
@@ -38,28 +40,63 @@ export default {
   methods: {
     getBasisStyle() {
       const attrs = this.$attrs
+      const attrsKeys = Object.keys(attrs)
       let style = {}
-      Object.keys(attrs).forEach(attrKey => {
+      attrsKeys.forEach(attrKey => {
         if (whStyleMap[attrKey]) {
           style[whStyleMap[attrKey]] = setNumAndUnit(attrs[attrKey])
+          delete attrs[attrKey]
           return
         }
 
         if (positionTRBLMap[attrKey]) {
           style[positionTRBLMap[attrKey]] = setNumAndUnit(attrs[attrKey])
+          delete attrs[attrKey]
           return
         }
 
         if (positionTypeMap[attrKey]) {
           Object.assign(style, positionTypeMap[attrKey])
+          delete attrs[attrKey]
+          return
         }
 
         if (attrKey === 'bgc') {
           style[bgStyleMap[attrKey]] = attrs[attrKey]
+          delete attrs[attrKey]
         }
       })
+      this.classObj = Object.keys(attrs)
       return style
     },
   }
 }
 </script>
+<style lang="stylus" scoped>
+.px-c
+  left 50%
+  transform translateX(-50%)
+.py-c
+  top 50%
+  transform translateY(-50%)
+.pxy-c
+  position: absolute
+  left 50%
+  top 50%
+  transform translate3d(-50%,-50%,0)
+.fx-c
+  display flex
+  justify-content center
+.fy-c
+  display flex
+  align-items center
+.fxy-c
+  display flex
+  align-items center
+  justify-content center
+// *        字体大小            *
+// * **************************/
+for size in range(16, 50, 2)
+  .fz-{size}
+    font-size: (size/100) rem
+</style>
